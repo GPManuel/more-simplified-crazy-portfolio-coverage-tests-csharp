@@ -20,6 +20,19 @@ public class PortfolioWithOnlyFrenchWine
     }
 
     [Test]
+    public void value_no_change_before_now_when_value_is_greater_than_199()
+    {
+        var portfolio = APortFolio()
+            .With(AnAsset().DescribedAs("French Wine").FromDate("2024/01/15").WithValue("200"))
+            .OnDate("2025/01/01")
+            .Build();
+
+        portfolio.ComputePortfolioValue();
+
+        Assert.That(portfolio._messages[0], Is.EqualTo("200"));
+    }
+
+    [Test]
     public void value_grows_by_1_after_now()
     {
         var portfolio = APortFolio()
@@ -30,5 +43,18 @@ public class PortfolioWithOnlyFrenchWine
         portfolio.ComputePortfolioValue();
 
         Assert.That(portfolio._messages[0], Is.EqualTo("101"));
+    }
+
+    [Test]
+    public void value_not_change_after_now_when_value_is_max()
+    {
+        var portfolio = APortFolio()
+            .With(AnAsset().DescribedAs("French Wine").FromDate("2024/01/15").WithValue(200))
+            .OnDate("2024/01/01")
+            .Build();
+
+        portfolio.ComputePortfolioValue();
+
+        Assert.That(portfolio._messages[0], Is.EqualTo("200"));
     }
 }

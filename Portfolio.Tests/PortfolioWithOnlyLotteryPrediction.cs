@@ -23,7 +23,7 @@ public class PortfolioWithOnlyLotteryPrediction
     public void value_grows_by_1_11_days_or_more_after_now()
     {
         var portfolio = APortFolio()
-            .With(AnAsset().DescribedAs("Lottery Prediction").FromDate("2024/04/15").WithValue(100))
+            .With(AnAsset().DescribedAs("Lottery Prediction").FromDate("2024/01/12").WithValue(100))
             .OnDate("2024/01/01")
             .Build();
 
@@ -46,6 +46,19 @@ public class PortfolioWithOnlyLotteryPrediction
     }
 
     [Test]
+    public void value_grows_by_1_less_than_11_days_after_now()
+    {
+        var portfolio = APortFolio()
+            .With(AnAsset().DescribedAs("Lottery Prediction").FromDate("2024/04/14").WithValue(799))
+            .OnDate("2024/04/04")
+            .Build();
+
+        portfolio.ComputePortfolioValue();
+
+        Assert.That(portfolio._messages[0], Is.EqualTo("800"));
+    }
+
+    [Test]
     public void value_grows_by_3_less_than_6_days_after_now()
     {
         var portfolio = APortFolio()
@@ -56,6 +69,19 @@ public class PortfolioWithOnlyLotteryPrediction
         portfolio.ComputePortfolioValue();
 
         Assert.That(portfolio._messages[0], Is.EqualTo("53"));
+    }
+
+    [Test]
+    public void value_grows_by_2_less_than_6_days_after_now_when_overcome_max_value()
+    {
+        var portfolio = APortFolio()
+            .With(AnAsset().DescribedAs("Lottery Prediction").FromDate("2024/04/09").WithValue(798))
+            .OnDate("2024/04/04")
+            .Build();
+
+        portfolio.ComputePortfolioValue();
+
+        Assert.That(portfolio._messages[0], Is.EqualTo("800"));
     }
 
     [Test]
